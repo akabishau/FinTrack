@@ -10,9 +10,9 @@ import NavBar from './components/NavBar'
 const App = () => {
   return (
     <BrowserRouter>
-      <div className='App'>
+      <div>
         <NavBar />
-        <div id='page-body'>
+        <div>
           <Routes>
             <Route path='/' element={<HomePage />} />
             <Route path='/transactions' element={<TransactionsPage />} />
