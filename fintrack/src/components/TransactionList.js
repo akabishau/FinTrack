@@ -12,9 +12,10 @@ const TransactionListHeader = () => {
 
 
 const Transaction = ({tranData}) => {
+    console.log(tranData)
     return (
         <div>
-            <div>{tranData.type}</div>
+            <div>{tranData.transType}</div>
             <div>{tranData.category}</div>
             <div>{'$' + tranData.amount}</div>
         </div>
