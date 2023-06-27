@@ -1,14 +1,28 @@
 import './App.css'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import HomePage from './pages/Home'
+import TransactionsPage from './pages/Transactions'
+import TransactionPage from './pages/Transaction'
+import AboutPage from './pages/About'
+import NavBar from './components/NavBar'
 
-function App() {
+
+const App = () => {
   return (
-    <div className='App'>
-      <h1>FinTrack App</h1>
-      <div id='page body'>
-        Welcome to FinTrack
+    <BrowserRouter>
+      <div className='App'>
+        <NavBar />
+        <div id='page-body'>
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/transactions' element={<TransactionsPage />} />
+            <Route path='/transactions/:transactionId' element={<TransactionPage />} />
+            <Route path='/about' element={<AboutPage />} />
+          </Routes>
+        </div>
       </div>
-    </div>
-  );
+    </BrowserRouter>
+  )
 }
 
 export default App;
