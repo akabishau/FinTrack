@@ -4,6 +4,7 @@ import HomePage from './pages/Home'
 import TransactionsPage from './pages/Transactions'
 import TransactionPage from './pages/Transaction'
 import AboutPage from './pages/About'
+import NotFound from './pages/NotFound'
 import NavBar from './components/NavBar'
 
 
@@ -18,6 +19,7 @@ const App = () => {
             <Route path='/transactions' element={<TransactionsPage />} />
             <Route path='/transactions/:transactionId' element={<TransactionPage />} />
             <Route path='/about' element={<AboutPage />} />
+            <Route path='*' element={<NotFound />} />
           </Routes>
         </div>
       </div>

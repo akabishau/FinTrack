@@ -12,7 +12,6 @@ const TransactionListHeader = () => {
 
 
 const Transaction = ({tranData}) => {
-    console.log(tranData)
     return (
         <div>
             <div>{tranData.transType}</div>
