@@ -9,7 +9,10 @@
     "author": "Aleksey Kabishau",
     "license": "ISC",
     "dependencies": {
-      "express": "^4.17.1"
+      "express": "^4.17.1",
+      "dotenv": "^10.0.0",
+      "mongoose": "^5.13.2",
+      "jsonwebtoken": "^8.5.1"
     },
     "devDependencies": {
       "nodemon": "^2.0.9"
