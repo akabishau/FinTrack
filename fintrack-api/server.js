@@ -8,7 +8,7 @@ app.use(express.json())
 app.get('/', (req, res) => { res.send('fintrack-api') })
 
 // routes
-// authentication
+app.use('/api/v1/auth', require('./routes/auth'))
 // transactions
 // categories
 // accounts
