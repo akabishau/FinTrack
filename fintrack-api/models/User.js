@@ -33,6 +33,12 @@ const UserSchema = new mongoose.Schema({
         type: [mongoose.Schema.Types.ObjectId],
         ref: 'Category',
         required: true
+    },
+    accounts: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Account',
+        required: true,
+        default: []
     }
 })
 
