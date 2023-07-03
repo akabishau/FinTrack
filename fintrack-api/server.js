@@ -5,12 +5,15 @@ const app = express()
 require('dotenv').config()
 app.use(express.json())
 
+const authenticateUser = require('./middleware/auth')
+
 app.get('/', (req, res) => { res.send('fintrack-api') })
 
 // routes
 app.use('/api/v1/auth', require('./routes/auth'))
 // transactions
-// categories
+
+app.use('/api/v1/categories', authenticateUser, require('./routes/categories'))
 // accounts
 
 
