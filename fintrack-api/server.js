@@ -26,16 +26,18 @@ app.use('/api/v1/categories', authenticateUser, require('./routes/categories'))
 // server and db connection
 const port = process.env.PORT || 3000
 const connectDB = require('./db/connect')
+const createDefaultTransactionTypes = require('./init.js')
 
 const start = async () => {
   try {
     await connectDB(process.env.MONGO_URI)
-    app.listen(port, () =>
+    app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`)
-    );
+      createDefaultTransactionTypes()
+    })
   } catch (error) {
     console.log(error)
   }
-};
+}
 
 start()
