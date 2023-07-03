@@ -2,7 +2,7 @@ const User = require('../models/User')
 const Category = require('../models/Category')
 const { StatusCodes } = require('http-status-codes')
 
-// get all categories
+
 const getCategories = async (req, res) => {
     console.log('getCategories')
     try {
@@ -22,14 +22,26 @@ const getCategories = async (req, res) => {
     }
 }
 
+
 const createCategory = async (req, res) => {
-    req.body.createdBy = req.user.userId // add user Id to the request's body
-    const category = await Category.create(req.body)
-    res.status(StatusCodes.CREATED).json({
-        status: 'Success',
-        msg: `Category has been created`,
-        category
-    })
+    try {
+        const user = await User.findById(req.user.userId)
+
+        const { transactionType, name } = req.body
+        // checks for empty fields
+        const category = await Category.create({ transactionType, name, createdBy: req.user.userId })
+        user.categories.push(category._id)
+        user.save()
+
+        res.status(StatusCodes.CREATED).json({
+            status: 'Success',
+            msg: `Category has been created`,
+            category,
+            user
+        })
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 // view category

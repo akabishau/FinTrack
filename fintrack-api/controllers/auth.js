@@ -1,10 +1,17 @@
 const User = require('../models/User')
+const TransactionType = require('../models/TransactionType')
 const { StatusCodes } = require('http-status-codes')
 
 const register = async (req, res) => {
     try {
         // hash password in the model
-        const user = await User.create({ ...req.body })
+        const user = new User({ ...req.body })
+        // add default transaction types
+        user.transactionTypes = await TransactionType.find()
+        user.categories = []
+        await user.save()
+
+
         const token = user.createJWT()
         res.status(StatusCodes.CREATED).json(
             {
@@ -43,7 +50,7 @@ const login = async (req, res) => {
     }
 
     const token = user.createJWT()
-    res.status(200).json({ msg: 'Login successful', token })
+    res.status(200).json({ msg: 'Login successful', token, user })
 }
 
 module.exports = { register, login }
