@@ -1,21 +1,13 @@
-const mongoose = require('mongoose');
-
-const typeSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        enum: ['income', 'expense', 'transfer'],
-        required: true,
-    }
-})
+const mongoose = require('mongoose')
 
 const categorySchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
   },
-  transType: {
+  type: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'TransType',
+    ref: 'Type',
     required: true,
   },
   createdBy: {
@@ -23,12 +15,9 @@ const categorySchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
-});
+})
 
-// Create a unique index for 'name', 'transType' and 'createdBy'
-categorySchema.index({ name: 1, transType: 1, createdBy: 1 }, { unique: true });
+// Create a unique index for 'name', 'type' and 'createdBy'
+categorySchema.index({ name: 1, type: 1, createdBy: 1 }, { unique: true })
 
-const Category = mongoose.model('Category', categorySchema);
-const TransType = mongoose.model('TransType', typeSchema);
-
-module.exports = { Category, TransType };
+module.exports = mongoose.model('Category', categorySchema)

@@ -1,5 +1,5 @@
 const User = require('../models/User')
-const { Category, TransType } = require('../models/Category')
+const Category = require('../models/Category')
 const { StatusCodes } = require('http-status-codes')
 
 // get all categories
