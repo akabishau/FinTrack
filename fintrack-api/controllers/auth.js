@@ -42,7 +42,8 @@ const login = async (req, res) => {
         throw new Error('Incorrect password')
     }
 
-    res.status(200).json({ msg: 'Login successful' })
+    const token = user.createJWT()
+    res.status(200).json({ msg: 'Login successful', token })
 }
 
 module.exports = { register, login }

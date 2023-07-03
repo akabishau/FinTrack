@@ -23,6 +23,16 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Password is required'],
         minLength: 6
+    },
+    categories:{
+        income: {
+            type: [String],
+            default: ['Salary', 'Gift']
+        },
+        expense: {
+            type: [String],
+            default: ['Gift', 'Groceries', 'coffee]']
+        }
     }
 })
 
