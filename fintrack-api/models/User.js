@@ -24,15 +24,15 @@ const UserSchema = new mongoose.Schema({
         required: [true, 'Password is required'],
         minLength: 6
     },
-    categories:{
-        income: {
-            type: [String],
-            default: ['Salary', 'Gift']
-        },
-        expense: {
-            type: [String],
-            default: ['Gift', 'Groceries', 'coffee]']
-        }
+    transactionTypes: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'TransactionType',
+        required: true
+    },
+    categories: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Category',
+        required: true
     }
 })
 

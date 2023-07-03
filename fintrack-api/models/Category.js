@@ -5,9 +5,9 @@ const categorySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  type: {
+  transactionType: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Type',
+    ref: 'TransactionType',
     required: true,
   },
   createdBy: {
@@ -18,6 +18,7 @@ const categorySchema = new mongoose.Schema({
 })
 
 // Create a unique index for 'name', 'type' and 'createdBy'
-categorySchema.index({ name: 1, type: 1, createdBy: 1 }, { unique: true })
+categorySchema.index({ name: 1, transactionType: 1, createdBy: 1 }, { unique: true })
+const Category = mongoose.model('Category', categorySchema)
 
-module.exports = mongoose.model('Category', categorySchema)
+module.exports = Category
