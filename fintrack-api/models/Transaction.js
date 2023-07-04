@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const Account = require('../models/Account')
+const TransactionType = require('../models/TransactionType')
+const Category = require('../models/Category')
 
 const transactionSchema = new mongoose.Schema(
     {
@@ -37,6 +39,25 @@ const transactionSchema = new mongoose.Schema(
 
 transactionSchema.pre('save', async function (next) {
     console.log('transactionSchema.pre(save)')
+
+    // validate type/category/account exist
+    const isValidAccount = await Account.exists({ _id: this.account })
+    if (!isValidAccount) {
+        return next(new Error('Invalid account'));
+    }
+
+
+    const isValidTransactionType = await TransactionType.exists({ _id: this.transactionType })
+    if (!isValidTransactionType) {
+        return next(new Error('Invalid transaction type'))
+    }
+
+    const isValidCategory = await Category.exists({ _id: this.category });
+    if (!isValidCategory) {
+        return next(new Error('Invalid category'));
+    }
+
+    // link transaction to account
     try {
         const account = await Account.findById(this.account)
         account.transactions.push(this._id)
@@ -48,7 +69,7 @@ transactionSchema.pre('save', async function (next) {
         await Transaction.findByIdAndDelete(this._id)
         next(error)
     }
-    
+
 })
 
 
