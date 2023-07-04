@@ -26,7 +26,7 @@ app.use('/api/v1/categories', authenticateUser, require('./routes/categories'))
 
 
 // server and db connection
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 8000
 const connectDB = require('./db/connect')
 const createDefaultTransactionTypes = require('./init.js')
 
