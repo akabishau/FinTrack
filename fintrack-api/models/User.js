@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Name is required'],
@@ -42,20 +42,21 @@ const UserSchema = new mongoose.Schema({
     }
 })
 
-// hash password before saving
-UserSchema.pre('save', async function (next) {
-    // this - refers to the User document being saved
+
+userSchema.pre('save', async function (next) {
+    // hash password before saving
     try {
         const salt = await bcrypt.genSalt(10)
         this.password = await bcrypt.hash(this.password, salt)
         next()
-    } catch {
+    } catch (error) {
+        console.log(error)
         next(error)
     }
 })
 
 // use jwt to sign token
-UserSchema.methods.createJWT = function () {
+userSchema.methods.createJWT = function () {
     return jwt.sign(
         { userId: this._id, name: this.name },
         process.env.JWT_SECRET,
@@ -64,11 +65,11 @@ UserSchema.methods.createJWT = function () {
     )
 }
 
-UserSchema.methods.comparePasswords = async function (password) {
+userSchema.methods.comparePasswords = async function (password) {
     return await bcrypt.compare(password, this.password)
 }
 
 
 
-
-module.exports = mongoose.model('User', UserSchema)
+const User = mongoose.model('User', userSchema)
+module.exports = User

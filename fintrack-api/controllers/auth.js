@@ -9,9 +9,11 @@ const register = async (req, res) => {
         // add default transaction types
         user.transactionTypes = await TransactionType.find()
         user.categories = []
+        // add accounts
         await user.save()
 
-
+        // do I need token for registration?
+        // postman doesn't update it now
         const token = user.createJWT()
         res.status(StatusCodes.CREATED).json(
             {
