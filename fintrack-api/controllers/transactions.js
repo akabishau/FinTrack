@@ -1,5 +1,5 @@
 const Transaction = require('../models/Transaction')
-const Account = require('../models/Account')
+//const Account = require('../models/Account')
 const { StatusCodes } = require('http-status-codes')
 
 const createTransaction = async (req, res) => {
@@ -7,8 +7,8 @@ const createTransaction = async (req, res) => {
     try {
         req.body.createdBy = req.user.userId
         const transaction = await Transaction.create(req.body)
-        const account = req.body.account
-        await Account.findByIdAndUpdate(account, { $push: { transactions: transaction }})
+        // const account = req.body.account
+        // await Account.findByIdAndUpdate(account, { $push: { transactions: transaction }})
 
         res.status(StatusCodes.CREATED).json({
             status: 'Success',

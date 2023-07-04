@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Account = require('../models/Account')
 
 const transactionSchema = new mongoose.Schema(
     {
@@ -33,6 +34,23 @@ const transactionSchema = new mongoose.Schema(
     },
     { timestamps: true }
 )
+
+transactionSchema.pre('save', async function (next) {
+    console.log('transactionSchema.pre(save)')
+    try {
+        const account = await Account.findById(this.account)
+        account.transactions.push(this._id)
+        await account.save()
+        next()
+    } catch (error) {
+        console.log(error)
+        // rollback transaction in case of any error
+        await Transaction.findByIdAndDelete(this._id)
+        next(error)
+    }
+    
+})
+
 
 const Transaction = mongoose.model('Transaction', transactionSchema)
 
