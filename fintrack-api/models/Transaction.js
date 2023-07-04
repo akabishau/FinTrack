@@ -69,10 +69,34 @@ transactionSchema.pre('save', async function (next) {
         await Transaction.findByIdAndDelete(this._id)
         next(error)
     }
+})
 
+transactionSchema.pre('findOneAndDelete', async function (next) {
+    console.log('transactionSchema.pre(findOneAndDelete)')
+
+    // review using session/transaction here to rollback in case of error
+    try {
+        // getQuery accesses current query conditions
+        const transaction = await Transaction.findOne(this.getQuery())
+
+        if (!transaction) {
+            return next(new Error('Transaction not found'))
+        }
+
+        const account = await Account.findById(transaction.account);
+        if (!account) {
+            throw new Error('Associated account not found');
+        }
+
+        account.transactions.pull(transaction._id);
+        await account.save();
+        next();
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
 })
 
 
 const Transaction = mongoose.model('Transaction', transactionSchema)
-
 module.exports = Transaction
