@@ -4,23 +4,18 @@ const { StatusCodes } = require('http-status-codes')
 
 const register = async (req, res) => {
     try {
-        // hash password in the model
+        // hash password in the model before saving
         const user = new User({ ...req.body })
-        // add default transaction types
         user.transactionTypes = await TransactionType.find()
         user.categories = []
-        // add accounts
+        user.accounts = []
         await user.save()
 
-        // do I need token for registration?
-        // postman doesn't update it now
-        const token = user.createJWT()
         res.status(StatusCodes.CREATED).json(
             {
                 status: 'Success',
                 msg: 'New user has been created',
-                user: { name: user.name },
-                token
+                user: { name: user.name }
             }
         )
     } catch (error) {

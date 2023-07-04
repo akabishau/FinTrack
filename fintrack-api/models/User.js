@@ -44,15 +44,22 @@ const userSchema = new mongoose.Schema({
 
 
 userSchema.pre('save', async function (next) {
+    console.log('userSchema.pre(save)')
     // hash password before saving
-    try {
-        const salt = await bcrypt.genSalt(10)
-        this.password = await bcrypt.hash(this.password, salt)
-        next()
-    } catch (error) {
-        console.log(error)
-        next(error)
+    if (this.isModified('password')) {
+        console.log('modified password')
+        try {
+            const salt = await bcrypt.genSalt(10)
+            this.password = await bcrypt.hash(this.password, salt)
+            next()
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
     }
+
+    console.log('other presave actions completed')
+    next()
 })
 
 // use jwt to sign token
