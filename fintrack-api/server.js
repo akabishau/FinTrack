@@ -12,6 +12,7 @@ app.get('/', (req, res) => { res.send('fintrack-api') })
 // routes
 app.use('/api/v1/auth', require('./routes/auth'))
 app.use('/api/v1/accounts', authenticateUser, require('./routes/accounts'))
+app.use('/api/v1/transactions', authenticateUser, require('./routes/transactions'))
 // transactions
 
 app.use('/api/v1/categories', authenticateUser, require('./routes/categories'))
