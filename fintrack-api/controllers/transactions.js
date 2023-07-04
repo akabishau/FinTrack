@@ -43,34 +43,80 @@ const getTransaction = async (req, res) => {
 
 const updateTransaction = async (req, res) => {
     console.log('updateTransaction')
+    try {
+        const { user: { userId }, params: { transactionId }, body } = req
+        
+        const update = {}
+        if (body.transactionType) update.transactionType = body.transactionType
+        if (body.category) update.category = body.category
+        // add change for the account later (pre save hook in Transaction model to link transaction to new account)
+        if (body.amount) update.amount = body.amount
+        if (body.description) update.description = body.description
+
+        const updatedTransaction = await Transaction.findOneAndUpdate(
+            { createdBy: userId, _id: transactionId },
+            update, // update object
+            { new: true, runValidators: true, omitUndefined: true } // by default returns old document and does not run validators on update
+        )
+
+        if (!updatedTransaction) {
+            throw new Error('Transaction not found')
+        }
+
+        res.status(StatusCodes.OK).json({
+            status: 'Success',
+            msg: `Transaction has been updated`,
+            updatedTransaction
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 const deleteTransaction = async (req, res) => {
     console.log('deleteTransaction')
+    try {
+        const { user: { userId }, params: { transactionId } } = req
+        const transaction = await Transaction.findOneAndDelete(
+            { createdBy: userId, _id: transactionId })
+        if (!transaction) {
+            throw new Error('Transaction not found')
+        }
+        res.status(StatusCodes.OK).json({
+            status: 'Success',
+            msg: `Transaction has been deleted`,
+            transaction
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
+
 }
 
 const getTransactions = async (req, res) => {
     try {
-    //   const { accountId } = req.params;
-    const accountId = '64a351838907772dc77d486d'
-  
-      const account = await Account.findById(accountId).populate('transactions');
-  
-      if (!account) {
-        return res.status(StatusCodes.NOT_FOUND).json({ error: 'Account not found' });
-      }
-  
-      const transactions = account.transactions;
-  
-      res.status(StatusCodes.OK).json({
-        status: 'Success',
-        transactions,
-      });
+        //   const { accountId } = req.params;
+        const accountId = '64a351838907772dc77d486d'
+
+        const account = await Account.findById(accountId).populate('transactions');
+
+        if (!account) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: 'Account not found' });
+        }
+
+        const transactions = account.transactions;
+
+        res.status(StatusCodes.OK).json({
+            status: 'Success',
+            transactions,
+        });
     } catch (error) {
-      console.log(error);
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong' });
+        console.log(error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong' });
     }
-  };
+};
 
 module.exports = {
     createTransaction,
