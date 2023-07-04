@@ -1,5 +1,5 @@
 const Transaction = require('../models/Transaction')
-//const Account = require('../models/Account')
+const Account = require('../models/Account')
 const { StatusCodes } = require('http-status-codes')
 
 const createTransaction = async (req, res) => {
@@ -7,9 +7,7 @@ const createTransaction = async (req, res) => {
     try {
         req.body.createdBy = req.user.userId
         const transaction = await Transaction.create(req.body)
-        // const account = req.body.account
-        // await Account.findByIdAndUpdate(account, { $push: { transactions: transaction }})
-
+        // link transaction to account - pre save hook in Transaction model
         res.status(StatusCodes.CREATED).json({
             status: 'Success',
             msg: `Transaction has been created`,
@@ -23,6 +21,24 @@ const createTransaction = async (req, res) => {
 
 const getTransaction = async (req, res) => {
     console.log('getTransaction')
+    // destructure user id and transaction id from req
+    const { user: { userId }, params: { transactionId } } = req
+    try {
+        const transaction = await Transaction.findOne(
+            { createdBy: userId, _id: transactionId })
+            .populate('account', 'name')
+            .populate('transactionType', 'name')
+            .populate('category', 'name')
+        if (!transaction) {
+            throw new Error('Transaction not found')
+        }
+        res.status(StatusCodes.OK).json({
+            status: 'Success',
+            transaction
+        })
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 const updateTransaction = async (req, res) => {

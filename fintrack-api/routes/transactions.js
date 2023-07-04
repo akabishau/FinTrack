@@ -10,6 +10,6 @@ const {
 } = require('../controllers/transactions')
 
 router.route('/').get(getTransactions).post(createTransaction)
-router.route('/:id').get(getTransaction).patch(updateTransaction).delete(deleteTransaction)
+router.route('/:transactionId').get(getTransaction).patch(updateTransaction).delete(deleteTransaction)
 
 module.exports = router
