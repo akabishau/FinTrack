@@ -45,7 +45,7 @@ const updateTransaction = async (req, res) => {
     console.log('updateTransaction')
     try {
         const { user: { userId }, params: { transactionId }, body } = req
-        
+
         const update = {}
         if (body.transactionType) update.transactionType = body.transactionType
         if (body.category) update.category = body.category
@@ -96,20 +96,17 @@ const deleteTransaction = async (req, res) => {
 }
 
 const getTransactions = async (req, res) => {
+    console.log('getAllTransactions')
     try {
-        //   const { accountId } = req.params;
-        const accountId = '64a351838907772dc77d486d'
-
-        const account = await Account.findById(accountId).populate('transactions');
-
-        if (!account) {
-            return res.status(StatusCodes.NOT_FOUND).json({ error: 'Account not found' });
-        }
-
-        const transactions = account.transactions;
+        const userId = req.user.userId
+        const transactions = await Transaction.find({ createdBy: userId })
+            .populate('account', 'name')
+            .populate('transactionType', 'name')
+            .populate('category', 'name')
 
         res.status(StatusCodes.OK).json({
             status: 'Success',
+            count: transactions.length,
             transactions,
         });
     } catch (error) {
