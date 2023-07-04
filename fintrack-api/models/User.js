@@ -3,12 +3,12 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Name is required'],
         minLength: 2,
-        maxLenght: 50
+        maxLength: 50
     },
     email: {
         type: String,
@@ -42,20 +42,28 @@ const UserSchema = new mongoose.Schema({
     }
 })
 
-// hash password before saving
-UserSchema.pre('save', async function (next) {
-    // this - refers to the User document being saved
-    try {
-        const salt = await bcrypt.genSalt(10)
-        this.password = await bcrypt.hash(this.password, salt)
-        next()
-    } catch {
-        next(error)
+
+userSchema.pre('save', async function (next) {
+    console.log('userSchema.pre(save)')
+    // hash password before saving
+    if (this.isModified('password')) {
+        console.log('modified password')
+        try {
+            const salt = await bcrypt.genSalt(10)
+            this.password = await bcrypt.hash(this.password, salt)
+            next()
+        } catch (error) {
+            console.log(error)
+            next(error)
+        }
     }
+
+    console.log('other presave actions completed')
+    next()
 })
 
 // use jwt to sign token
-UserSchema.methods.createJWT = function () {
+userSchema.methods.createJWT = function () {
     return jwt.sign(
         { userId: this._id, name: this.name },
         process.env.JWT_SECRET,
@@ -64,11 +72,11 @@ UserSchema.methods.createJWT = function () {
     )
 }
 
-UserSchema.methods.comparePasswords = async function (password) {
+userSchema.methods.comparePasswords = async function (password) {
     return await bcrypt.compare(password, this.password)
 }
 
 
 
-
-module.exports = mongoose.model('User', UserSchema)
+const User = mongoose.model('User', userSchema)
+module.exports = User
