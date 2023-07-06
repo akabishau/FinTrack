@@ -29,16 +29,18 @@ const UserSignIn = () => {
     }
 
     try {
-      const user = await actions.signIn(credentials)
-      if (user) {
+      const errorInfo = await actions.signIn(credentials)
+      
+      if (!errorInfo) {
         // navigate to the previous page or the root/dashboard
         navigate(from, { replace: true })
       } else {
-        setErrors(['Sign-in was unsuccessful'])
+        setErrors([errorInfo.status, errorInfo.msg])
       }
     } catch (error) {
-      console.log(error)
-      navigate('/error')
+      console.log(error.message)
+      // error route is redirected to not found for now
+      navigate('/error') 
     }
   }
 

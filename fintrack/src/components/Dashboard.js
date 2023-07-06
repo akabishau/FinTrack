@@ -9,7 +9,7 @@ const Dashboard = () => {
     <div>
       <div>
         <h1>Dashboard</h1>
-        <h3>{ authUser.user.name } is Authenticated.</h3>
+        <h3>{ authUser.name } is Authenticated.</h3>
       </div>
     </div>
   )
