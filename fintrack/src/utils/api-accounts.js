@@ -1,29 +1,36 @@
-import accounData from '../data/accounts.json'
+export async function getAccount(accountId, token) {
 
-export async function getAccounts(query) {
+  const fetchOptions = {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` }
+  }
 
 
-    await fakeNetwork(query)
-    // complete
-
-    return accounData.accounts
-
+  const response = await fetch(`/api/v1/accounts/${accountId}`, fetchOptions)
+  if (response.status === 200) {
+    const account = await response.json()
+    return account
+  } else {
+    console.log('ErrorGetAccount', response.status)
+    return null
+  }
 }
 
-// fake a cache so we don't slow down stuff we've already seen
-let fakeCache = {}
 
-async function fakeNetwork(key) {
-  if (!key) {
-    fakeCache = {}
+export async function getAccounts(token) {
+  const fetchOptions = {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${token}` }
   }
 
-  if (fakeCache[key]) {
-    return
-  }
+  console.log('fetchOptions', fetchOptions)
 
-  fakeCache[key] = true
-  return new Promise(res => {
-    setTimeout(res, Math.random() * 800)
-  })
+  const response = await fetch('/api/v1/accounts/', fetchOptions)
+  if (response.status === 200) {
+    const { accounts } = await response.json()
+    return accounts
+  } else {
+    console.log('ErrorGetAccount', response.status)
+    return null
+  }
 }

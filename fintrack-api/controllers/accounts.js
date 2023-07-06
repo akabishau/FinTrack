@@ -7,7 +7,6 @@ const { StatusCodes } = require('http-status-codes')
 const createAccount = async (req, res) => {
     console.log('createAccount')
     try {
-        console.log(req.user.userId)
         const user = await User.findById(req.user.userId)
         if (!user) {
             return res.status(StatusCodes.NOT_FOUND).json({ error: 'User not found' })
@@ -30,11 +29,18 @@ const createAccount = async (req, res) => {
 // view account
 const getAccount = async (req, res) => {
     console.log('getAccount')
-    console.log('req.user', req.user)
     try {
-        const account = await Account.findOne(
-            { createdBy: req.user.userId, _id: req.params.accountId }
-        ).populate('transactions')
+        const account = await Account.findOne({ createdBy: req.user.userId, _id: req.params.accountId })
+        .populate({
+            path: 'transactions',
+            model: 'Transaction',
+            populate: [
+              { path: 'transactionType', model: 'TransactionType' },
+              { path: 'category', model: 'Category' },
+              { path: 'account', model: 'Account' },
+              { path: 'createdBy', model: 'User' }
+            ]
+          })
         if (!account) {
             throw new Error('Account not found')
         }
@@ -42,7 +48,6 @@ const getAccount = async (req, res) => {
             status: 'Success',
             account
         })
-
     } catch (error) {
         console.log(error)
     }

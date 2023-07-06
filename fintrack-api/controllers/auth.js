@@ -34,7 +34,7 @@ const register = async (req, res) => {
 
 
 const login = async (req, res) => {
-
+    console.log('login')
     try {
         const { email, password } = req.body
         if (!email || !password) {
@@ -42,6 +42,9 @@ const login = async (req, res) => {
         }
 
         const user = await User.findOne({ email })
+            .populate('transactionTypes')
+            .populate('categories')
+            .populate('accounts')
         if (!user) {
             throw new UnauthenticatedError('Could not find email')
         }
@@ -52,7 +55,13 @@ const login = async (req, res) => {
         }
 
         const token = user.createJWT()
-        res.status(200).json({ msg: 'Login successful', token, user })
+        res.status(200).json(
+            {
+                msg: 'Login successful',
+                token,
+                user
+            }
+        )
     } catch (error) {
         res.status(error.statusCode).json(
             {
