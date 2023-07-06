@@ -1,6 +1,5 @@
 const { StatusCodes } = require('http-status-codes')
-const { APIError } = require('../errors')
-// node first looks for a file called index.js when you require a directory
+const APIError = require('../errors/APIError')
 
 const errorHandler = (err, req, res, next) => {
     console.log('errorHandler middleware called')
@@ -9,7 +8,11 @@ const errorHandler = (err, req, res, next) => {
         console.log('custom error')
         return res.status(err.statusCode).json({ msg: err.message })
     }
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ msg: err.message })
+    console.log('internal error', err.message)
+    
+    return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send('Something went wrong, please try again later')
 }
 
 module.exports = errorHandler
