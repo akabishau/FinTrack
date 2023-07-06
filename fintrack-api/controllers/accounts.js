@@ -28,6 +28,25 @@ const createAccount = async (req, res) => {
     }
 }
 // view account
+const getAccount = async (req, res) => {
+    console.log('getAccount')
+    console.log('req.user', req.user)
+    try {
+        const account = await Account.findOne(
+            { createdBy: req.user.userId, _id: req.params.accountId }
+        ).populate('transactions')
+        if (!account) {
+            throw new Error('Account not found')
+        }
+        res.status(StatusCodes.OK).json({
+            status: 'Success',
+            account
+        })
+
+    } catch (error) {
+        console.log(error)
+    }
+}
 // update account
 // delete account
 
@@ -49,4 +68,4 @@ const getAccounts = async (req, res) => {
     }
 }
 
-module.exports = { createAccount, getAccounts }
+module.exports = { createAccount, getAccounts, getAccount }
