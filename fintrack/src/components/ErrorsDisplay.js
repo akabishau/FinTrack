@@ -6,8 +6,8 @@ const ErrorsDisplay = ({ errors }) => {
     if (errors.length) {
         errorsToDisplay = (
         <div>
-          <h2 className=''>Errors</h2>
-          <div className=''>
+          <h2>Errors</h2>
+          <div>
             <ul>
               { errors.map((error, i) => <li key={i}>{error}</li>) }
             </ul>

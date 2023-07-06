@@ -3,7 +3,9 @@ import Cookies from 'js-cookie'
 
 const UserContext = createContext(null)
 
+// wrapper component that provides the context to its children
 export const UserProvider = (props) => {
+
     const cookie = Cookies.get('authenticatedUser') // will be undefined if no cookie exists
     const [authUser, setAuthUser] = useState(cookie ? JSON.parse(cookie) : null)
 

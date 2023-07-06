@@ -6,7 +6,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 const PrivateRoute = () => {
 
     const { authUser } = useContext(UserContext)
-    console.log(authUser)
+    console.log('private routhe', authUser)
 
     const location = useLocation()
     console.log(location)

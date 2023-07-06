@@ -1,11 +1,10 @@
 import { useContext, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-//import ThemeContext from '../context/ThemeContext'
 import UserContext from '../context/UserContext'
 import ErrorsDisplay from './ErrorsDisplay'
 
 const UserSignUp = () => {
-    //const { accentColor } = useContext(ThemeContext)
+
     const navigate = useNavigate()
     const { actions } = useContext(UserContext)
 
@@ -36,9 +35,9 @@ const UserSignUp = () => {
             const response = await fetch('/api/v1/auth/register', fetchOptions)
             if (response.status === 201) {
                 console.log(`${user.name} is successfully signed up and authenticated!`)
-                //navigate('/login')
-                await actions.signIn(user) // more additional properties
-                navigate('/authenticated')
+                // sign in the user and redirect to the root/dashboard
+                await actions.signIn(user) // user object has extra name property
+                navigate('/')
             } else if (response.status === 400) {
                 const data = await response.json()
                 setErrors(data.errors)
@@ -52,46 +51,22 @@ const UserSignUp = () => {
 
     }
 
-    const handleCancel = (event) => {
-        event.preventDefault()
-        navigate('/')
-    }
-
     return (
-        <div className='bounds'>
-            <div className='grid-33 centered signin'>
+        <div>
+            <div>
                 <h1>Sign up</h1>
                 <div>
                     <ErrorsDisplay errors={errors} />
 
                     <form onSubmit={handleSubmit}>
-                        <input
-                            id='name'
-                            name='name'
-                            type='text'
-                            ref={name}
-                            placeholder='Name' />
-                        <input
-                            id='email'
-                            name='email'
-                            type='text'
-                            ref={email}
-                            placeholder='Email' />
-                        <input
-                            id='password'
-                            name='password'
-                            type='password'
-                            ref={password}
-                            placeholder='Password' />
-
-                        <div className='pad-bottom'>
-                            <button className='button' type='submit' style={{ background: '' }}>Sign up</button>
-                            <button className='button button-secondary' style={{ color: '' }} onClick={handleCancel}>Cancel</button>
-                        </div>
+                        <input id='name' name='name' type='text' ref={name} placeholder='Name' />
+                        <input id='email' name='email' type='text' ref={email} placeholder='Email' />
+                        <input id='password' name='password' type='password' ref={password} placeholder='Password' />
+                        <button type='submit'>Sign up</button>
                     </form>
                 </div>
                 <p>
-                    Already have a user account? <Link style={{ color: '' }} to='/signin'>Click here</Link> to sign in!
+                    Already have a user account? <Link to='/signin'>Click here</Link> to sign in!
                 </p>
             </div>
         </div>
