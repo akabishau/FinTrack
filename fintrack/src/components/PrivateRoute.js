@@ -9,7 +9,7 @@ const PrivateRoute = () => {
 
 
     const location = useLocation()
-    console.log('private route', location.pathname, authUser.name)
+    console.log('private route', location.pathname, authUser ? authUser.name : null)
 
     if (authUser) {
         return <Outlet />
