@@ -11,7 +11,7 @@ const Nav = () => {
         <nav>
             {authUser ?
                 <>
-                    <span>Logged in as {authUser.user.name}</span>
+                    <span>Logged in as {authUser.name}</span>
                     <Link to='/settings'>Settings</Link>
                     <Link to='/signout'>Sign out</Link>
                 </>
