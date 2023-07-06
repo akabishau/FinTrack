@@ -19,6 +19,7 @@ app.use('/api/v1/categories', authenticateUser, require('./routes/categories'))
 // middleware
   // error handler
 app.use(require('./middleware/not-found'))
+app.use(require('./middleware/error-handler'))
 
 
 
