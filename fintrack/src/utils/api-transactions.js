@@ -27,3 +27,17 @@ export async function updateTransaction(id, transactionData, authToken) {
   // handle on a call site
   return fetch(`/api/v1/transactions/${id}`, fetchOptions)
 }
+
+
+export async function deleteTransaction(id, authToken) {
+  // think about using a PUT request instead
+  const fetchOptions = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${authToken}`,
+    }
+  }
+  // handle on a call site
+  return fetch(`/api/v1/transactions/${id}`, fetchOptions)
+}
