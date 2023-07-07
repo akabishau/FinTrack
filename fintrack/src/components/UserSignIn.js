@@ -33,7 +33,8 @@ const UserSignIn = () => {
       
       if (!errorInfo) {
         // navigate to the previous page or the root/dashboard
-        navigate(from, { replace: true })
+        //navigate(from, { replace: true })
+        navigate('/')
       } else {
         setErrors([errorInfo.status, errorInfo.msg])
       }
