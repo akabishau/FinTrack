@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import { getAccount } from '../utils/api-accounts'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import UserContext from '../context/UserContext'
 import { AuthContext } from '../context/AuthContext'
