@@ -1,4 +1,0 @@
-env-variables:
-MONGO_URI:mongodb+srv://alekseykabishau:caHqo2-qobpog-zogryh@cluster0.wndvuvl.mongodb.net/FinTrackDB?retryWrites=true&w=majority
-JWT_SECRET:u7w!z%C*F2JaNdRgUkXp2S5v8y/A?D(G
-JWT_EXPIRES_IN:48h
