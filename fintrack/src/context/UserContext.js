@@ -24,7 +24,7 @@ export const UserProvider = (props) => {
         }
 
 
-        const response = await fetch('/api/v1/auth/login', fetchOptions)
+        const response = await fetch('https://fintrackapp.onrender.com/api/v1/auth/login', fetchOptions)
         if (response.status === 200) {
             const { user, token } = await response.json()
             actions.setToken(token)

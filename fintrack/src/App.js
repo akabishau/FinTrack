@@ -19,7 +19,7 @@ const App = () => {
         <Route path='signin' element={<UserSignIn />} />
         <Route path='signout' element={<UserSignOut />} />
         <Route element={<PrivateRoute />}>
-          <Route path='https://fintrackapp.onrender.com' element={<Dashboard />} />
+          <Route path='/' element={<Dashboard />} />
           <Route path='create-transaction' element={<TransactionCreate />} />
           <Route path='transactions' element={<TransactionForm />} />
           <Route path='transactions/:id' element={<TransactionForm />} />
