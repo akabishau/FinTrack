@@ -9,6 +9,7 @@ function Dashboard() {
     // state
     const [accounts, setAccounts] = useState([])
     const [transactions, setTransactions] = useState([])
+    const [accountDetails, setAccountDetails] = useState([])
     const [selectedAccount, setSelectedAccount] = useState(null)
 
     // context
@@ -25,6 +26,8 @@ function Dashboard() {
             const getAccountTransactions = async () => {
                 try {
                     const data = await getAccount(selectedAccount?._id, authToken)
+                    console.log('ACCOUNT:', data)
+                    setAccountDetails(data.account)
                     setTransactions(data.account.transactions || [])
                 } catch (error) {
                     console.error('Error fetching transactions:', error)
@@ -32,7 +35,7 @@ function Dashboard() {
             }
             getAccountTransactions()
         }
-        
+
     }, [selectedAccount, authToken])
 
     const handleAccountSelection = async (account) => {
@@ -65,11 +68,12 @@ function Dashboard() {
             <div className='content'>
                 {selectedAccount ? (
                     <div>
+                        <h2>Balance: {accountDetails.balance}</h2>
                         {transactions.length > 0 ? (
                             <ul>
                                 {transactions.map((transaction) => (
                                     <li key={transaction._id}>
-                                    {transaction.category.name} - {transaction.amount}
+                                        {transaction.category.name} - {transaction.amount}
                                     </li>
                                 ))}
                             </ul>
