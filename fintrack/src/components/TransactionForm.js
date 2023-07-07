@@ -1,15 +1,33 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
-import { createTransaction } from '../utils/api-transactions'
+import { createTransaction, updateTransaction } from '../utils/api-transactions'
 
 import UserContext from '../context/UserContext'
 import { AuthContext } from '../context/AuthContext'
 
 function TransactionForm() {
-
     const navigate = useNavigate()
     const location = useLocation()
+
+    const transaction = location.state?.transaction
+    useEffect(() => {
+        console.log('transaction details:', transaction)
+        if (transaction) {
+            setIsEditMode(true)
+            setFormData({
+                account: transaction.account._id,
+                transactionType: transaction.transactionType._id,
+                category: transaction.category._id,
+                amount: transaction.amount,
+                description: transaction.description
+            })
+        }
+    }, [transaction])
+
+    const [isEditMode, setIsEditMode] = useState(false)
+
+    // create new logic
     const searchParams = new URLSearchParams(location.search)
     const accountId = searchParams.get('accountId')
     const accountName = searchParams.get('accountName')
@@ -41,19 +59,40 @@ function TransactionForm() {
     
     const handleSubmit = async (e) => {
         e.preventDefault()
-        try {
-            const response = await createTransaction(formData, authToken)
-            const data = await response.json()
-            if (response.status === 201) {
-                setFeedbackMessage(`${data.status} ${data.msg}`)
-                setTimeout(() => { navigate(-1) }, 1000)
-            } else {
-                setFeedbackMessage(`${data.status} ${data.msg}`)
-                console.log('Error creating transaction:', response.status)
+        if (isEditMode) {
+            console.log('edit mode')
+            try {
+                const response = await updateTransaction(transaction._id, formData, authToken)
+                const data = await response.json()
+                console.log('data:', data)
+                if (response.status === 200) {
+                    setFeedbackMessage('Update Successful')
+                    setTimeout(() => { navigate(-1) }, 1000)
+                } else {
+                    setFeedbackMessage('Update Failed')
+                    console.log('Error updating transaction:', response.status)
+                }
+            } catch (error) {
+                setFeedbackMessage('Something went wrong. Please try again later.')
+                console.error('Error updating transaction:', error)
             }
-        } catch (error) {
-            setFeedbackMessage('Transaction creation failed.')
-            console.error('Error creating transaction:', error)
+
+
+        } else {
+            console.log('create mode')
+            try {
+                const response = await createTransaction(formData, authToken)
+                if (response.status === 201) {
+                    setFeedbackMessage(`Congrats! You've created a new transaction.`)
+                    setTimeout(() => { navigate(-1) }, 1000)
+                } else {
+                    setFeedbackMessage('Transaction creation failed...')
+                    console.log('Error creating transaction:', response.status)
+                }
+            } catch (error) {
+                setFeedbackMessage('Transaction creation failed.')
+                console.error('Error creating transaction:', error)
+            }
         }
     }
 
@@ -61,11 +100,11 @@ function TransactionForm() {
 
     return (
         <div>
-            <h2>Create Transaction</h2>
+            <h2>{isEditMode ? 'Update Existing Transaction' : 'Create New Transaction'}</h2>
 
             {feedbackMessage && <p>{feedbackMessage}</p>}
 
-            <h3>Account: {accountName}</h3>
+            <h3>Account :{isEditMode ? transaction.account.name : accountName}</h3>
 
             <form onSubmit={handleSubmit}>
 
@@ -113,7 +152,7 @@ function TransactionForm() {
                     </label>
                 </div>
                 <div>
-                    <button type='submit'>Create</button>
+                    <button type='submit'>{isEditMode ? 'Update' : 'Save'}</button>
                     <button type='button' onClick={handleCancel}>
                         Cancel
                     </button>

@@ -1,17 +1,21 @@
 import { useState, useContext, useEffect } from 'react'
 import { getAccount } from '../utils/api-accounts'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import UserContext from '../context/UserContext'
 import { AuthContext } from '../context/AuthContext'
 
 
 function Dashboard() {
+
+    const navigate = useNavigate()
+
     // state
     const [accounts, setAccounts] = useState([])
     const [transactions, setTransactions] = useState([])
     const [accountDetails, setAccountDetails] = useState([])
     const [selectedAccount, setSelectedAccount] = useState(null)
+    // selected transaction?
 
     // context
     const { authToken } = useContext(AuthContext)
@@ -39,8 +43,17 @@ function Dashboard() {
 
     }, [selectedAccount, authToken])
 
+
     const handleAccountSelection = async (account) => {
         setSelectedAccount(account)
+    }
+
+
+    const handleTransactionEdit = (transaction) => {
+        navigate(
+            `/transactions/${transaction._id}`,
+            { state: { transaction } }
+        )
     }
 
     return (
@@ -81,9 +94,7 @@ function Dashboard() {
                                 {transactions.map((transaction) => (
                                     <li key={transaction._id}>
                                         {transaction.category.name} - {transaction.amount}
-                                        <Link to={`/transactions/${transaction._id}`}>
-                                            <button>View</button>
-                                        </Link>
+                                        <button onClick={() => handleTransactionEdit(transaction)}>Edit</button>
                                     </li>
                                 ))}
                             </ul>
