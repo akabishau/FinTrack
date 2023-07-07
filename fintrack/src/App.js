@@ -15,15 +15,15 @@ const App = () => {
     <div>
       <Header />
       <Routes>
-        <Route path='signup' element={<UserSignUp />} />
-        <Route path='signin' element={<UserSignIn />} />
-        <Route path='signout' element={<UserSignOut />} />
+        <Route path='https://fintrackapp.onrender.com/signup' element={<UserSignUp />} />
+        <Route path='https://fintrackapp.onrender.com/signin' element={<UserSignIn />} />
+        <Route path='https://fintrackapp.onrender.com/signout' element={<UserSignOut />} />
         <Route element={<PrivateRoute />}>
-          <Route path='/' element={<Dashboard />} />
-          <Route path='create-transaction' element={<TransactionCreate />} />
-          <Route path='transactions' element={<TransactionForm />} />
-          <Route path='transactions/:id' element={<TransactionForm />} />
-          <Route path='settings' element={<Settings />} />
+          <Route path='https://fintrackapp.onrender.com' element={<Dashboard />} />
+          <Route path='https://fintrackapp.onrender.com/create-transaction' element={<TransactionCreate />} />
+          <Route path='https://fintrackapp.onrender.com/transactions' element={<TransactionForm />} />
+          <Route path='https://fintrackapp.onrender.com/transactions/:id' element={<TransactionForm />} />
+          <Route path='https://fintrackapp.onrender.com/settings' element={<Settings />} />
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>
