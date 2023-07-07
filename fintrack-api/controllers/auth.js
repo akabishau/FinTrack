@@ -41,20 +41,30 @@ const login = async (req, res) => {
             throw new BadRequestError('Please provide both email and password')
         }
 
-        const user = await User.findOne({ email })
+        const fullUser = await User.findOne({ email })
             .populate('transactionTypes')
             .populate('categories')
             .populate('accounts')
-        if (!user) {
+        if (!fullUser) {
             throw new UnauthenticatedError('Could not find email')
         }
 
-        const isMatch = await user.comparePasswords(password)
+        const isMatch = await fullUser.comparePasswords(password)
         if (!isMatch) {
             throw new UnauthenticatedError('Incorrect password')
         }
 
-        const token = user.createJWT()
+        // temp solution to remove password and email from response
+        // TODO: find a better solution (.select ?)
+        const user = {
+            _id: fullUser._id,
+            name: fullUser.name,
+            transactionTypes: fullUser.transactionTypes,
+            categories: fullUser.categories,
+            accounts: fullUser.accounts
+        }
+        
+        const token = fullUser.createJWT()
         res.status(200).json(
             {
                 msg: 'Login successful',
