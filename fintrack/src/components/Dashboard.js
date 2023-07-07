@@ -1,3 +1,4 @@
+import styled from 'styled-components'
 import { useState, useContext, useEffect } from 'react'
 import { getAccount } from '../utils/api-accounts'
 import { useNavigate } from 'react-router-dom'
@@ -15,7 +16,6 @@ function Dashboard() {
     const [transactions, setTransactions] = useState([])
     const [accountDetails, setAccountDetails] = useState([])
     const [selectedAccount, setSelectedAccount] = useState(null)
-    // selected transaction?
 
     // context
     const { authToken } = useContext(AuthContext)
@@ -89,20 +89,25 @@ function Dashboard() {
                 </div>
             </div>
 
-            <div className='content'>
+            <div>
                 {selectedAccount ? (
                     <div>
-                        <h2>Balance: {accountDetails.balance}</h2>
+                        <Balance>Balance: {accountDetails.balance}</Balance>
                         <button onClick={handleCreateTransaction}>Create New</button>
                         {transactions.length > 0 ? (
-                            <ul>
+                            <TransactionList>
                                 {transactions.map((transaction) => (
-                                    <li key={transaction._id}>
-                                        {transaction.category.name} - {transaction.amount}
+                                    <TableRow key={transaction._id}>
+                                        <div>{transaction.transactionType.name}</div>
+                                        <div>{transaction.category.name}</div>
+                                        <Amount transactionType={transaction.transactionType}>
+                                            {transaction.transactionType === 'expense' ? '-' : ''}
+                                            <NegativeSign>{Math.abs(transaction.amount)}</NegativeSign>
+                                        </Amount>
                                         <button onClick={() => handleTransactionEdit(transaction)}>Edit</button>
-                                    </li>
+                                    </TableRow>
                                 ))}
-                            </ul>
+                            </TransactionList>
                         ) : (
                             <div>No transactions found</div>
                         )}
@@ -114,5 +119,39 @@ function Dashboard() {
         </div>
     )
 }
+
+const Amount = styled.div`
+  color: ${props => props.transactionType === 'expense' ? 'red' : 'green'};
+`
+
+const NegativeSign = styled.span`
+  &::before {
+    content: '-';
+  }
+`
+
+const Balance = styled.h2`
+  font-size: 24px;
+  color: #333;
+  margin: 0;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+`
+
+const TransactionList = styled.div`
+    height: 100%;
+    padding: 10px;
+    margin: 0;
+    display: grid;
+    grid-auto-rows: 50px;
+    gap: 10px;
+`
+
+const TableRow = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
+`
 
 export default Dashboard
