@@ -1,17 +1,21 @@
 import { useState, useContext, useEffect } from 'react'
 import { getAccount } from '../utils/api-accounts'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import UserContext from '../context/UserContext'
 import { AuthContext } from '../context/AuthContext'
 
 
 function Dashboard() {
+
+    const navigate = useNavigate()
+
     // state
     const [accounts, setAccounts] = useState([])
     const [transactions, setTransactions] = useState([])
     const [accountDetails, setAccountDetails] = useState([])
     const [selectedAccount, setSelectedAccount] = useState(null)
+    // selected transaction?
 
     // context
     const { authToken } = useContext(AuthContext)
@@ -39,9 +43,28 @@ function Dashboard() {
 
     }, [selectedAccount, authToken])
 
+
     const handleAccountSelection = async (account) => {
         setSelectedAccount(account)
     }
+
+
+    const handleCreateTransaction = () => {
+        console.log('handleCreateTransaction', selectedAccount)
+        navigate(
+            '/transactions/',
+            { state: { selectedAccount } }
+        )
+    }
+
+
+    const handleTransactionEdit = (transaction) => {
+        navigate(
+            `/transactions/${transaction._id}`,
+            { state: { transaction } }
+        )
+    }
+
 
     return (
         <div className='app'>
@@ -70,14 +93,13 @@ function Dashboard() {
                 {selectedAccount ? (
                     <div>
                         <h2>Balance: {accountDetails.balance}</h2>
-                        <Link to={`/create-transaction?accountId=${selectedAccount._id}&accountName=${selectedAccount.name}`}>
-                            <button>Create Transaction</button>
-                        </Link>
+                        <button onClick={handleCreateTransaction}>Create New</button>
                         {transactions.length > 0 ? (
                             <ul>
                                 {transactions.map((transaction) => (
                                     <li key={transaction._id}>
                                         {transaction.category.name} - {transaction.amount}
+                                        <button onClick={() => handleTransactionEdit(transaction)}>Edit</button>
                                     </li>
                                 ))}
                             </ul>
