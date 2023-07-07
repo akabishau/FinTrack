@@ -2,6 +2,8 @@ const Transaction = require('../models/Transaction')
 const Account = require('../models/Account')
 const { StatusCodes } = require('http-status-codes')
 
+
+//TODO: Type/Category validation
 const createTransaction = async (req, res) => {
     console.log('createTransaction')
     try {
@@ -13,12 +15,17 @@ const createTransaction = async (req, res) => {
             msg: `Transaction has been created`,
             transaction
         })
-
     } catch (error) {
-        console.log(error)
+        console.log(error.message)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            status: 'Failed',
+            msg: 'Transaction could not be created'
+        })
     }
 }
 
+
+// ERROR: TypeError: Cannot read properties of undefined (reading 'forEach')
 const getTransaction = async (req, res) => {
     console.log('getTransaction')
     // destructure user id and transaction id from req
@@ -37,7 +44,8 @@ const getTransaction = async (req, res) => {
             transaction
         })
     } catch (error) {
-        console.log(error)
+        console.log('unknown error', error.message)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong' })
     }
 }
 
@@ -70,7 +78,8 @@ const updateTransaction = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error)
+        console.log('unknown error', error.message)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong' })
     }
 }
 
@@ -90,7 +99,8 @@ const deleteTransaction = async (req, res) => {
         })
 
     } catch (error) {
-        console.log(error)
+        console.log('unknown error', error.message)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong' })
     }
 
 }
@@ -110,8 +120,8 @@ const getTransactions = async (req, res) => {
             transactions,
         });
     } catch (error) {
-        console.log(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong' });
+        console.log('unknown error', error.message)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong' })
     }
 };
 
