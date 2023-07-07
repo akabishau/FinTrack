@@ -73,11 +73,17 @@ function Dashboard() {
                         <Link to={`/create-transaction?accountId=${selectedAccount._id}&accountName=${selectedAccount.name}`}>
                             <button>Create Transaction</button>
                         </Link>
+                        <Link to={`/transactions?accountId=${selectedAccount._id}&accountName=${selectedAccount.name}`}>
+                            <button>Create New Transaction</button>
+                        </Link>
                         {transactions.length > 0 ? (
                             <ul>
                                 {transactions.map((transaction) => (
                                     <li key={transaction._id}>
                                         {transaction.category.name} - {transaction.amount}
+                                        <Link to={`/transactions/${transaction._id}`}>
+                                            <button>View</button>
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>
