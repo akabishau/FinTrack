@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
-import { createTransaction, updateTransaction } from '../utils/api-transactions'
+import { createTransaction, updateTransaction, deleteTransaction } from '../utils/api-transactions'
 
 import UserContext from '../context/UserContext'
 import { AuthContext } from '../context/AuthContext'
@@ -116,6 +116,23 @@ function TransactionForm() {
         }
     }
 
+    const handleDelete = async () => {
+        console.log('delete mode')
+        try { 
+            const response = await deleteTransaction(transaction._id, authToken)
+            if (response.status === 200) {
+                setFeedbackMessage('Transaction deleted.')
+                setTimeout(() => { navigate(-1) }, 1000)
+            } else {
+                setFeedbackMessage('Transaction deletion failed.')
+                console.log('Error deleting transaction:', response.status)
+            }
+        } catch (error) {
+            setFeedbackMessage('Transaction deletion failed.')
+            console.error('Error deleting transaction:', error)
+        }
+    }
+
     const handleCancel = () => { navigate(-1) }
 
     return (
@@ -180,9 +197,8 @@ function TransactionForm() {
                 </div>
                 <div>
                     <button type='submit'>{isEditMode ? 'Update' : 'Save'}</button>
-                    <button type='button' onClick={handleCancel}>
-                        Cancel
-                    </button>
+                    <button type='button' onClick={handleCancel}>Cancel</button>
+                    {isEditMode && <button type='button' onClick={handleDelete}>Delete</button>}
                 </div>
             </form>
         </div>
