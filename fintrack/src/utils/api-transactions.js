@@ -11,7 +11,7 @@ export async function createTransaction(transactionData, authToken) {
     body: JSON.stringify(transactionData)
   }
   // handle on a call site
-  return fetch('/api/v1/transactions/', fetchOptions)
+  return fetch('https://fintrackapp.onrender.com/api/v1/transactions/', fetchOptions)
 }
 
 export async function updateTransaction(id, transactionData, authToken) {
@@ -25,7 +25,7 @@ export async function updateTransaction(id, transactionData, authToken) {
     body: JSON.stringify(transactionData)
   }
   // handle on a call site
-  return fetch(`/api/v1/transactions/${id}`, fetchOptions)
+  return fetch(`https://fintrackapp.onrender.com//api/v1/transactions/${id}`, fetchOptions)
 }
 
 
@@ -39,5 +39,5 @@ export async function deleteTransaction(id, authToken) {
     }
   }
   // handle on a call site
-  return fetch(`/api/v1/transactions/${id}`, fetchOptions)
+  return fetch(`https://fintrackapp.onrender.com//api/v1/transactions/${id}`, fetchOptions)
 }
