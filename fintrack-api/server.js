@@ -5,6 +5,21 @@ const app = express()
 require('dotenv').config()
 app.use(express.json())
 
+// extra packages
+const helmet = require('helmet')
+app.use(helmet())
+
+const cors = require('cors')
+app.use(cors())
+
+// project no longer supported
+const xss = require('xss-clean')
+app.use(xss())
+
+const rateLimiter = require('express-rate-limit')
+app.set('trust proxy', 1) // to deploy on heroku (render.com ?)
+app.use(rateLimiter({ windowMs: 15 * 60 * 1000, max: 100 })) // each IP 100 request per 15 minutes
+
 const authenticateUser = require('./middleware/auth')
 
 app.get('/', (req, res) => { res.send('fintrack-api') })
@@ -17,10 +32,8 @@ app.use('/api/v1/categories', authenticateUser, require('./routes/categories'))
 
 
 // middleware
-  // error handler
 app.use(require('./middleware/not-found'))
 app.use(require('./middleware/error-handler'))
-
 
 
 // server and db connection
