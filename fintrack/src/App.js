@@ -7,6 +7,7 @@ import UserSignOut from './components/UserSignOut'
 import Settings from './components/Settings'
 import PrivateRoute from './components/PrivateRoute'
 import Dashboard from './components/Dashboard'
+import TransactionCreate from './components/TransactionCreate'
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
         <Route path='signout' element={<UserSignOut />} />
         <Route element={<PrivateRoute />}>
           <Route path='/' element={<Dashboard />} />
+          <Route path='create-transaction' element={<TransactionCreate />} />
           <Route path='settings' element={<Settings />} />
         </Route>
         <Route path='*' element={<NotFound />} />

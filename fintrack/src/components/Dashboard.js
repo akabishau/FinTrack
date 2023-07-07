@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import { getAccount } from '../utils/api-accounts'
+import { Link, useParams } from 'react-router-dom'
 
 import UserContext from '../context/UserContext'
 import { AuthContext } from '../context/AuthContext'
@@ -69,6 +70,9 @@ function Dashboard() {
                 {selectedAccount ? (
                     <div>
                         <h2>Balance: {accountDetails.balance}</h2>
+                        <Link to={`/create-transaction?accountId=${selectedAccount._id}&accountName=${selectedAccount.name}`}>
+                            <button>Create Transaction</button>
+                        </Link>
                         {transactions.length > 0 ? (
                             <ul>
                                 {transactions.map((transaction) => (
