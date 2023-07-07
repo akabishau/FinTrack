@@ -10,43 +10,61 @@ function TransactionForm() {
     const navigate = useNavigate()
     const location = useLocation()
 
-    const transaction = location.state?.transaction
-    useEffect(() => {
-        console.log('transaction details:', transaction)
-        if (transaction) {
-            setIsEditMode(true)
-            setFormData({
-                account: transaction.account._id,
-                transactionType: transaction.transactionType._id,
-                category: transaction.category._id,
-                amount: transaction.amount,
-                description: transaction.description
-            })
-        }
-    }, [transaction])
-
-    const [isEditMode, setIsEditMode] = useState(false)
-
-    // create new logic
-    const searchParams = new URLSearchParams(location.search)
-    const accountId = searchParams.get('accountId')
-    const accountName = searchParams.get('accountName')
-
     const { authToken } = useContext(AuthContext)
     // get the user's categories and transaction types from context
     const { authUser } = useContext(UserContext)
-    const categories = authUser.categories || []
-    const transactionTypes = authUser.transactionTypes || []
 
-    const [feedbackMessage, setFeedbackMessage] = useState('')
-
+    const [isEditMode, setIsEditMode] = useState(false)
+    const [account, setAccount] = useState(location.state?.selectedAccount)
+    const [transaction, setTransaction] = useState(location.state.transaction)
     const [formData, setFormData] = useState({
-        account: accountId,
+        account: '',
         transactionType: '',
         category: '',
         amount: '',
         description: ''
     })
+    const [feedbackMessage, setFeedbackMessage] = useState('')
+
+    useEffect(() => {
+        console.log('use effect')
+        
+        const extractData = () => {
+            if (location.state?.transaction) {
+                setTransaction(location.state.transaction)
+                setIsEditMode(true)
+                setFormData({
+                    account: transaction.account._id,
+                    transactionType: transaction.transactionType._id,
+                    category: transaction.category._id,
+                    amount: transaction.amount,
+                    description: transaction.description
+                })
+            } else if (location.state?.selectedAccount) {
+                setAccount(location.state.selectedAccount)
+                setIsEditMode(false)
+                // account change functionality is not yet implemented
+                setFormData({
+                    account: account._id,
+                    transactionType: '',
+                    category: '',
+                    amount: '',
+                    description: ''
+                })
+            }
+        }
+        extractData()
+
+    }, [location, account, transaction])
+
+    
+    const categories = authUser.categories || []
+    const transactionTypes = authUser.transactionTypes || []
+
+    console.log('form location:', location)
+    console.log('transaction details:', transaction, formData)
+    console.log('account details:', account, formData)
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -56,12 +74,14 @@ function TransactionForm() {
         }))
     }
 
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (isEditMode) {
+            console.log('formData:', formData)
             console.log('edit mode')
             try {
+
                 const response = await updateTransaction(transaction._id, formData, authToken)
                 const data = await response.json()
                 console.log('data:', data)
@@ -104,7 +124,14 @@ function TransactionForm() {
 
             {feedbackMessage && <p>{feedbackMessage}</p>}
 
-            <h3>Account :{isEditMode ? transaction.account.name : accountName}</h3>
+            <h3>Account:
+                {isEditMode
+                    ?
+                    (transaction ? transaction.account.name : "loading name...")
+                    :
+                    (account ? account.name : 'loading name...')
+                }
+            </h3>
 
             <form onSubmit={handleSubmit}>
 

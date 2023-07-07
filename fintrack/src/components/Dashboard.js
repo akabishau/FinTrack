@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import { getAccount } from '../utils/api-accounts'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import UserContext from '../context/UserContext'
 import { AuthContext } from '../context/AuthContext'
@@ -49,12 +49,22 @@ function Dashboard() {
     }
 
 
+    const handleCreateTransaction = () => {
+        console.log('handleCreateTransaction', selectedAccount)
+        navigate(
+            '/transactions/',
+            { state: { selectedAccount } }
+        )
+    }
+
+
     const handleTransactionEdit = (transaction) => {
         navigate(
             `/transactions/${transaction._id}`,
             { state: { transaction } }
         )
     }
+
 
     return (
         <div className='app'>
@@ -83,12 +93,7 @@ function Dashboard() {
                 {selectedAccount ? (
                     <div>
                         <h2>Balance: {accountDetails.balance}</h2>
-                        <Link to={`/create-transaction?accountId=${selectedAccount._id}&accountName=${selectedAccount.name}`}>
-                            <button>Create Transaction</button>
-                        </Link>
-                        <Link to={`/transactions?accountId=${selectedAccount._id}&accountName=${selectedAccount.name}`}>
-                            <button>Create New Transaction</button>
-                        </Link>
+                        <button onClick={handleCreateTransaction}>Create New</button>
                         {transactions.length > 0 ? (
                             <ul>
                                 {transactions.map((transaction) => (
