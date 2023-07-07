@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom'
 import NotFound from './components/NotFound'
-import Header from './components/Header'
 import UserSignUp from './components/UserSignUp'
 import UserSignIn from './components/UserSignIn'
 import UserSignOut from './components/UserSignOut'
@@ -9,11 +8,11 @@ import PrivateRoute from './components/PrivateRoute'
 import Dashboard from './components/Dashboard'
 import TransactionCreate from './components/TransactionCreate'
 import TransactionForm from './components/TransactionForm'
+import Layout from './components/Layout'
 
 const App = () => {
   return (
-    <div>
-      <Header />
+    <Layout>
       <Routes>
         <Route path='signup' element={<UserSignUp />} />
         <Route path='signin' element={<UserSignIn />} />
@@ -27,7 +26,7 @@ const App = () => {
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>
-    </div>
+    </Layout>
   )
 }
 

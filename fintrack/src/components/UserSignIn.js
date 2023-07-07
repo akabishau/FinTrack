@@ -21,7 +21,7 @@ const UserSignIn = () => {
     event.preventDefault()
 
     // get the location state object passed from the PrivateRoute component or set it to the root path
-    let from = location.state ? location.state.from : '/'
+    // let from = location.state ? location.state.from : '/'
 
     const credentials = {
       email: email.current.value,
@@ -33,6 +33,7 @@ const UserSignIn = () => {
       
       if (!errorInfo) {
         // navigate to the previous page or the root/dashboard
+        // TODO: review - wasn't working after deployment
         //navigate(from, { replace: true })
         navigate('/')
       } else {
