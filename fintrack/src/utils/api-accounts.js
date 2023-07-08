@@ -6,7 +6,7 @@ export async function getAccount(accountId, token) {
   }
 
 
-  const response = await fetch(`/api/v1/accounts/${accountId}`, fetchOptions)
+  const response = await fetch(`https://fintrackapp.onrender.com/api/v1/accounts/${accountId}`, fetchOptions)
   if (response.status === 200) {
     const account = await response.json()
     return account
@@ -25,7 +25,7 @@ export async function getAccounts(token) {
 
   console.log('fetchOptions', fetchOptions)
 
-  const response = await fetch('/api/v1/accounts/', fetchOptions)
+  const response = await fetch('https://fintrackapp.onrender.com/api/v1/accounts/', fetchOptions)
   if (response.status === 200) {
     const { accounts } = await response.json()
     return accounts

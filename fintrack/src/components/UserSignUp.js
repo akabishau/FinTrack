@@ -32,7 +32,7 @@ const UserSignUp = () => {
 
         try {
             console.log('fetchOptions', fetchOptions)
-            const response = await fetch('/api/v1/auth/register', fetchOptions)
+            const response = await fetch('https://fintrackapp.onrender.com/api/v1/auth/register', fetchOptions)
             if (response.status === 201) {
                 console.log(`${user.name} is successfully signed up and authenticated!`)
                 // sign in the user and redirect to the root/dashboard
