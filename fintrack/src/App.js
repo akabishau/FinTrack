@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { Route, Routes } from 'react-router-dom'
+import NotFound from './components/NotFound'
+import UserSignUp from './components/UserSignUp'
+import UserSignIn from './components/UserSignIn'
+import UserSignOut from './components/UserSignOut'
+import Settings from './components/Settings'
+import PrivateRoute from './components/PrivateRoute'
+import Dashboard from './components/Dashboard'
+import TransactionCreate from './components/TransactionCreate'
+import TransactionForm from './components/TransactionForm'
+import Layout from './components/Layout'
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Layout>
+      <Routes>
+        <Route path='signup' element={<UserSignUp />} />
+        <Route path='signin' element={<UserSignIn />} />
+        <Route path='signout' element={<UserSignOut />} />
+        <Route element={<PrivateRoute />}>
+          <Route path='/' element={<Dashboard />} />
+          <Route path='create-transaction' element={<TransactionCreate />} />
+          <Route path='transactions' element={<TransactionForm />} />
+          <Route path='transactions/:id' element={<TransactionForm />} />
+          <Route path='settings' element={<Settings />} />
+        </Route>
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+    </Layout>
+  )
 }
 
-export default App;
+export default App
